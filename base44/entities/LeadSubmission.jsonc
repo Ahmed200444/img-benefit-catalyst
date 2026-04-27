@@ -1,0 +1,67 @@
+{
+  "name": "LeadSubmission",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "cell_phone": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "company_website": {
+      "type": "string"
+    },
+    "num_employees": {
+      "type": "number"
+    },
+    "avg_employee_salary": {
+      "type": "number"
+    },
+    "avg_marital_status": {
+      "type": "string",
+      "enum": [
+        "Married",
+        "Single",
+        "Mixed"
+      ]
+    },
+    "gross_revenue_last_year": {
+      "type": "number"
+    },
+    "openness_to_benefits": {
+      "type": "string",
+      "enum": [
+        "Very Open",
+        "Somewhat Open",
+        "Not Sure",
+        "Not Interested"
+      ]
+    },
+    "calculated_60": {
+      "type": "number"
+    },
+    "calculated_70": {
+      "type": "number"
+    },
+    "calculated_80": {
+      "type": "number"
+    },
+    "calculated_90": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "num_employees"
+  ]
+}
