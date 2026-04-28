@@ -11,7 +11,7 @@ export default function SchedulingSection() {
         </p>
       </div>
       <a
-        href="https://calendly.com/integratedmgtgroup"
+        href="https://calendly.com/integratedmgtgroup/30min"
         target="_blank"
         rel="noopener noreferrer"
       >
