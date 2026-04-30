@@ -65,7 +65,7 @@ export default function Calculator() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ background: "#eaf3f8" }}>
         <IMGHeader />
         <div className="max-w-4xl mx-auto px-4 py-10">
           <div className="flex items-center gap-3 mb-6 bg-green-50 border border-green-200 rounded-xl px-5 py-4">
@@ -93,14 +93,14 @@ export default function Calculator() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: "#eaf3f8" }}>
       <IMGHeader />
 
       <div className="max-w-2xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Business Information</h2>
+        <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-8">
+          <h2 className="text-lg font-bold mb-1" style={{ color: "#0d2137" }}>Business Information</h2>
           <p className="text-sm text-gray-500 mb-6">
-            Fill in the form below to calculate your estimated PreventivePay employer savings. Fields marked <span className="text-red-500">*</span> are required.
+            Fill in the form below to calculate your estimated Preventive Pay employer savings. Fields marked <span className="text-red-500">*</span> are required.
           </p>
 
           <form onSubmit={handleCalculate} className="space-y-5">
@@ -146,8 +146,8 @@ export default function Calculator() {
             </div>
 
             {/* KEY CALC FIELD */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-1">
-              <Label htmlFor="num_employees" className="text-blue-900 font-semibold">
+            <div className="rounded-xl p-4 space-y-1" style={{ background: "#e8f4fb", border: "1px solid #2b7a9e33" }}>
+              <Label htmlFor="num_employees" className="font-semibold" style={{ color: "#0d2137" }}>
                 Number of Employees <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -160,7 +160,7 @@ export default function Calculator() {
                 className="bg-white"
                 required
               />
-              <p className="text-xs text-blue-600">This is the key input for your savings calculation.</p>
+              <p className="text-xs" style={{ color: "#2b7a9e" }}>This is the key input for your savings calculation.</p>
             </div>
 
             {/* Row 4 */}
@@ -205,7 +205,8 @@ export default function Calculator() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-xl text-base"
+              className="w-full text-white font-semibold py-3 rounded-xl text-base"
+              style={{ background: "linear-gradient(90deg, #0d2137 0%, #1a4a7a 60%, #2b7a9e 100%)" }}
             >
               {loading ? "Calculating..." : "Calculate My Savings →"}
             </Button>
