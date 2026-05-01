@@ -21,7 +21,7 @@ const initialForm = {
   avg_marital_status: "", gross_revenue_last_year: "", openness_to_benefits: ""
 };
 
-function FieldLabel({ number, label, required }) {
+function FieldLabel({ number, label }) {
   return (
     <div className="flex items-center gap-2 mb-1">
       <span className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center flex-shrink-0"
@@ -29,7 +29,7 @@ function FieldLabel({ number, label, required }) {
         {number}
       </span>
       <span className="text-sm font-semibold text-gray-700">
-        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+        {label}<span className="text-red-500 ml-0.5">*</span>
       </span>
     </div>
   );
@@ -45,8 +45,10 @@ export default function Calculator() {
 
   const handleCalculate = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.num_employees) {
-      toast.error("Please fill in Name, Email, and Number of Employees to calculate.");
+    if (!form.name || !form.email || !form.cell_phone || !form.company_name || !form.industry ||
+        !form.company_website || !form.num_employees || !form.avg_employee_salary ||
+        !form.avg_marital_status || !form.gross_revenue_last_year || !form.openness_to_benefits) {
+      toast.error("Please fill in all required fields.");
       return;
     }
     const n = parseFloat(form.num_employees);
@@ -157,28 +159,28 @@ export default function Calculator() {
           <form onSubmit={handleCalculate} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <FieldLabel number={1} label="Your Name" required />
+                <FieldLabel number={1} label="Your Name" />
                 <Input placeholder="John Doe" value={form.name} onChange={e => set("name", e.target.value)} required className="h-11" />
               </div>
               <div>
                 <FieldLabel number={2} label="Your Cell Phone Number" />
-                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", e.target.value)} className="h-11" />
+                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", e.target.value)} required className="h-11" />
               </div>
             </div>
 
             <div>
-              <FieldLabel number={3} label="Your Email Address" required />
+              <FieldLabel number={3} label="Your Email Address" />
               <Input type="email" placeholder="john@company.com" value={form.email} onChange={e => set("email", e.target.value)} required className="h-11" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <FieldLabel number={4} label="Company Name" />
-                <Input placeholder="Acme Corp" value={form.company_name} onChange={e => set("company_name", e.target.value)} className="h-11" />
+                <Input placeholder="Acme Corp" value={form.company_name} onChange={e => set("company_name", e.target.value)} required className="h-11" />
               </div>
               <div>
                 <FieldLabel number={5} label="Company Website" />
-                <Input placeholder="company.com" value={form.company_website} onChange={e => set("company_website", e.target.value)} className="h-11" />
+                <Input placeholder="company.com" value={form.company_website} onChange={e => set("company_website", e.target.value)} required className="h-11" />
               </div>
             </div>
 
@@ -187,11 +189,11 @@ export default function Calculator() {
                 <FieldLabel number={6} label="Gross Revenue Last Year" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" placeholder="1,000,000" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", e.target.value)} className="h-11 pl-7" />
+                  <Input type="number" placeholder="1,000,000" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", e.target.value)} required className="h-11 pl-7" />
                 </div>
               </div>
               <div>
-                <FieldLabel number={7} label="Number of Full Time Employees" required />
+                <FieldLabel number={7} label="Number of Full Time Employees" />
                 <Input type="number" min="1" placeholder="50" value={form.num_employees} onChange={e => set("num_employees", e.target.value)} required className="h-11" />
               </div>
             </div>
@@ -201,7 +203,7 @@ export default function Calculator() {
                 <FieldLabel number={8} label="Average Annual Gross Wages Per Employee" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" placeholder="55,000" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", e.target.value)} className="h-11 pl-7" />
+                  <Input type="number" placeholder="55,000" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", e.target.value)} required className="h-11 pl-7" />
                 </div>
               </div>
               <div>
