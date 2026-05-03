@@ -15,7 +15,7 @@ const HEADERS = [
   'Avg Employee Salary',
   'Avg Marital Status',
   'Gross Revenue Last Year',
-  'Openness to Benefits',
+  'Employees Currently on Coverage',
   'Calculated 60%',
   'Calculated 70%',
   'Calculated 80%',

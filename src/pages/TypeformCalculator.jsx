@@ -19,7 +19,7 @@ const INDUSTRIES = [
 const STEPS = [
   { key: "name", label: "What's your full name?", type: "text", placeholder: "Jane Smith", required: true },
   { key: "email", label: "What's your email address?", type: "email", placeholder: "jane@company.com", required: true },
-  { key: "cell_phone", label: "What's your cell phone number?", type: "tel", placeholder: "(305) 000-0000", required: false },
+  { key: "cell_phone", label: "What's your cell phone number?", type: "tel", placeholder: "(305) 000-0000", required: false, formatPhone: true },
   { key: "company_name", label: "What's your company name?", type: "text", placeholder: "Acme Corp", required: false },
   { key: "industry", label: "What industry are you in?", type: "select", options: INDUSTRIES, required: false },
   { key: "company_website", label: "What's your company website?", type: "text", placeholder: "https://yourcompany.com", required: false },
@@ -27,7 +27,7 @@ const STEPS = [
   { key: "avg_employee_salary", label: "What's the average employee salary?", type: "number", placeholder: "e.g. 55000", required: false, prefix: "$" },
   { key: "avg_marital_status", label: "What's the average marital status of your employees?", type: "select", options: ["Married", "Single", "Mixed"], required: false },
   { key: "gross_revenue_last_year", label: "What was your gross revenue last year?", type: "number", placeholder: "e.g. 1000000", required: false, prefix: "$" },
-  { key: "openness_to_benefits", label: "Are you open to hearing about more benefits?", type: "select", options: ["Very Open", "Somewhat Open", "Not Sure", "Not Interested"], required: false },
+  { key: "openness_to_benefits", label: "How many employees are currently on coverage?", type: "select", options: ["Very Open", "Somewhat Open", "Not Sure", "Not Interested"], required: false },
 ];
 
 export default function TypeformCalculator() {
@@ -39,6 +39,13 @@ export default function TypeformCalculator() {
 
   const current = STEPS[step];
   const progress = ((step) / STEPS.length) * 100;
+
+  const formatPhone = (value) => {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  };
 
   const handleNext = async () => {
     if (current.required && !inputVal && form[current.key] === undefined) {
@@ -178,7 +185,7 @@ export default function TypeformCalculator() {
                   type={current.type}
                   placeholder={current.placeholder}
                   value={inputVal}
-                  onChange={e => setInputVal(e.target.value)}
+                  onChange={e => setInputVal(current.formatPhone ? formatPhone(e.target.value) : e.target.value)}
                   onKeyDown={handleKeyDown}
                   className={`w-full bg-transparent border-b-2 border-white/50 focus:border-white outline-none text-white text-2xl placeholder-white/40 py-3 transition-all
                     ${current.prefix ? "pl-8" : "pl-0"}`}

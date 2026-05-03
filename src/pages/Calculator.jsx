@@ -43,6 +43,13 @@ export default function Calculator() {
 
   const set = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
+  const formatPhone = (value) => {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  };
+
   const handleCalculate = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.cell_phone || !form.company_name || !form.industry ||
@@ -164,7 +171,7 @@ export default function Calculator() {
               </div>
               <div>
                 <FieldLabel number={2} label="Your Cell Phone Number" />
-                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", e.target.value)} required className="h-11" />
+                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", formatPhone(e.target.value))} required className="h-11" />
               </div>
             </div>
 
@@ -230,7 +237,7 @@ export default function Calculator() {
                 </Select>
               </div>
               <div>
-                <FieldLabel number={11} label="Open to Hearing About More Benefits?" />
+                <FieldLabel number={11} label="How many employees are currently on coverage?" />
                 <Select value={form.openness_to_benefits} onValueChange={v => set("openness_to_benefits", v)}>
                   <SelectTrigger className="h-11"><SelectValue placeholder="Select option" /></SelectTrigger>
                   <SelectContent>
