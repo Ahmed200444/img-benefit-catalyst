@@ -1,25 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const SPREADSHEET_ID = '1-FN62dm1zB3hxCeZrc6FbeEkCDGDdr8Fl_bQ1ROki2E';
+const SPREADSHEET_ID = '1ahYziCvuh3-SJImnseTQcXYytC1Rq8nUWEf1-4974yY';
 const SHEET_NAME = 'Sheet1';
 
 const HEADERS = [
   'Submitted At',
-  'Name',
-  'Email',
-  'Cell Phone',
+  'Contact Name',
+  'Email Address',
+  'Cell Phone Number',
   'Company Name',
-  'Industry',
   'Company Website',
-  'Num Employees',
-  'Avg Employee Salary',
-  'Avg Marital Status',
   'Gross Revenue Last Year',
+  'Number of Full Time Employees',
+  'Average Annual Gross Wages Per Employee',
+  'Average Employee Marital Status',
+  'Industry',
   'Employees Currently on Coverage',
-  'Calculated 60%',
-  'Calculated 70%',
-  'Calculated 80%',
-  'Calculated 90%',
+  'Calculated Savings (60%)',
+  'Calculated Savings (70%)',
+  'Calculated Savings (80%)',
+  'Calculated Savings (90%)',
 ];
 
 Deno.serve(async (req) => {
@@ -59,12 +59,12 @@ Deno.serve(async (req) => {
       data.email || '',
       data.cell_phone || '',
       data.company_name || '',
-      data.industry || '',
       data.company_website || '',
+      data.gross_revenue_last_year || '',
       data.num_employees || '',
       data.avg_employee_salary || '',
       data.avg_marital_status || '',
-      data.gross_revenue_last_year || '',
+      data.industry || '',
       data.openness_to_benefits || '',
       data.calculated_60 || '',
       data.calculated_70 || '',
