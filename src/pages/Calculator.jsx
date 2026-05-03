@@ -66,10 +66,17 @@ export default function Calculator() {
 
     setLoading(true);
     const payload = {
-      ...form,
+      name: form.name,
+      email: form.email,
+      cell_phone: form.cell_phone,
+      company_name: form.company_name,
+      company_website: form.company_website,
+      industry: form.industry,
       num_employees: n,
-      avg_employee_salary: form.avg_employee_salary ? parseFloat(form.avg_employee_salary) : undefined,
-      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(form.gross_revenue_last_year) : undefined,
+      avg_employee_salary: form.avg_employee_salary ? parseFloat(form.avg_employee_salary) : null,
+      avg_marital_status: form.avg_marital_status,
+      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(form.gross_revenue_last_year) : null,
+      openness_to_benefits: form.openness_to_benefits,
       calculated_60: Math.round(n * 0.6) * RATE,
       calculated_70: Math.round(n * 0.7) * RATE,
       calculated_80: Math.round(n * 0.8) * RATE,
