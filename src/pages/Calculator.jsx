@@ -35,13 +35,22 @@ function FieldLabel({ number, label }) {
   );
 }
 
+function FieldError({ message }) {
+  if (!message) return null;
+  return <p className="text-red-500 text-xs mt-1">{message}</p>;
+}
+
 export default function Calculator() {
   const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [calcEmployees, setCalcEmployees] = useState(null);
 
-  const set = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const set = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    setErrors(prev => ({ ...prev, [field]: "" }));
+  };
 
   const formatPhone = (value) => {
     const digits = value.replace(/\D/g, '').slice(0, 10);
@@ -50,19 +59,41 @@ export default function Calculator() {
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   };
 
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Name is required.";
+    const phoneDigits = form.cell_phone.replace(/\D/g, '');
+    if (!phoneDigits) newErrors.cell_phone = "Phone number is required.";
+    else if (phoneDigits.length !== 10) newErrors.cell_phone = "Enter a valid 10-digit phone number.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) newErrors.email = "Email is required.";
+    else if (!emailRegex.test(form.email)) newErrors.email = "Enter a valid email address.";
+    if (!form.company_name.trim()) newErrors.company_name = "Company name is required.";
+    if (!form.company_website.trim()) newErrors.company_website = "Company website is required.";
+    const n = parseFloat(form.num_employees);
+    if (!form.num_employees) newErrors.num_employees = "Number of employees is required.";
+    else if (isNaN(n) || n < 1 || !Number.isInteger(n)) newErrors.num_employees = "Enter a whole number ≥ 1.";
+    const salary = parseFloat(form.avg_employee_salary);
+    if (!form.avg_employee_salary) newErrors.avg_employee_salary = "Average salary is required.";
+    else if (isNaN(salary) || salary <= 0) newErrors.avg_employee_salary = "Enter a valid positive amount.";
+    const revenue = parseFloat(form.gross_revenue_last_year);
+    if (!form.gross_revenue_last_year) newErrors.gross_revenue_last_year = "Gross revenue is required.";
+    else if (isNaN(revenue) || revenue <= 0) newErrors.gross_revenue_last_year = "Enter a valid positive amount.";
+    if (!form.avg_marital_status) newErrors.avg_marital_status = "Please select a marital status.";
+    if (!form.industry) newErrors.industry = "Please select an industry.";
+    if (!form.openness_to_benefits) newErrors.openness_to_benefits = "Please select an option.";
+    return newErrors;
+  };
+
   const handleCalculate = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.cell_phone || !form.company_name || !form.industry ||
-        !form.company_website || !form.num_employees || !form.avg_employee_salary ||
-        !form.avg_marital_status || !form.gross_revenue_last_year || !form.openness_to_benefits) {
-      toast.error("Please fill in all required fields.");
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fix the errors before submitting.");
       return;
     }
     const n = parseFloat(form.num_employees);
-    if (isNaN(n) || n <= 0) {
-      toast.error("Please enter a valid number of employees.");
-      return;
-    }
 
     setLoading(true);
     const payload = {
@@ -174,27 +205,32 @@ export default function Calculator() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <FieldLabel number={1} label="Your Name" />
-                <Input placeholder="John Doe" value={form.name} onChange={e => set("name", e.target.value)} required className="h-11" />
+                <Input placeholder="John Doe" value={form.name} onChange={e => set("name", e.target.value)} className={`h-11 ${errors.name ? "border-red-400" : ""}`} />
+                <FieldError message={errors.name} />
               </div>
               <div>
                 <FieldLabel number={2} label="Your Cell Phone Number" />
-                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", formatPhone(e.target.value))} required className="h-11" />
+                <Input placeholder="(305) 000-0000" value={form.cell_phone} onChange={e => set("cell_phone", formatPhone(e.target.value))} className={`h-11 ${errors.cell_phone ? "border-red-400" : ""}`} />
+                <FieldError message={errors.cell_phone} />
               </div>
             </div>
 
             <div>
               <FieldLabel number={3} label="Your Email Address" />
-              <Input type="email" placeholder="john@company.com" value={form.email} onChange={e => set("email", e.target.value)} required className="h-11" />
+              <Input type="email" placeholder="john@company.com" value={form.email} onChange={e => set("email", e.target.value)} className={`h-11 ${errors.email ? "border-red-400" : ""}`} />
+              <FieldError message={errors.email} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <FieldLabel number={4} label="Company Name" />
-                <Input placeholder="Acme Corp" value={form.company_name} onChange={e => set("company_name", e.target.value)} required className="h-11" />
+                <Input placeholder="Acme Corp" value={form.company_name} onChange={e => set("company_name", e.target.value)} className={`h-11 ${errors.company_name ? "border-red-400" : ""}`} />
+                <FieldError message={errors.company_name} />
               </div>
               <div>
                 <FieldLabel number={5} label="Company Website" />
-                <Input placeholder="company.com" value={form.company_website} onChange={e => set("company_website", e.target.value)} required className="h-11" />
+                <Input placeholder="company.com" value={form.company_website} onChange={e => set("company_website", e.target.value)} className={`h-11 ${errors.company_website ? "border-red-400" : ""}`} />
+                <FieldError message={errors.company_website} />
               </div>
             </div>
 
@@ -203,12 +239,14 @@ export default function Calculator() {
                 <FieldLabel number={6} label="Gross Revenue Last Year" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" placeholder="1,000,000" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", e.target.value)} required className="h-11 pl-7" />
+                  <Input type="number" min="0" placeholder="1000000" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", e.target.value)} className={`h-11 pl-7 ${errors.gross_revenue_last_year ? "border-red-400" : ""}`} />
                 </div>
+                <FieldError message={errors.gross_revenue_last_year} />
               </div>
               <div>
                 <FieldLabel number={7} label="Number of Full Time Employees" />
-                <Input type="number" min="1" placeholder="50" value={form.num_employees} onChange={e => set("num_employees", e.target.value)} required className="h-11" />
+                <Input type="number" min="1" step="1" placeholder="50" value={form.num_employees} onChange={e => set("num_employees", e.target.value)} className={`h-11 ${errors.num_employees ? "border-red-400" : ""}`} />
+                <FieldError message={errors.num_employees} />
               </div>
             </div>
 
@@ -217,19 +255,21 @@ export default function Calculator() {
                 <FieldLabel number={8} label="Average Annual Gross Wages Per Employee" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" placeholder="55,000" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", e.target.value)} required className="h-11 pl-7" />
+                  <Input type="number" min="0" placeholder="55000" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", e.target.value)} className={`h-11 pl-7 ${errors.avg_employee_salary ? "border-red-400" : ""}`} />
                 </div>
+                <FieldError message={errors.avg_employee_salary} />
               </div>
               <div>
                 <FieldLabel number={9} label="Average Employee's Marital Status" />
                 <Select value={form.avg_marital_status} onValueChange={v => set("avg_marital_status", v)}>
-                  <SelectTrigger className="h-11"><SelectValue placeholder="Select marital status" /></SelectTrigger>
+                  <SelectTrigger className={`h-11 ${errors.avg_marital_status ? "border-red-400" : ""}`}><SelectValue placeholder="Select marital status" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Single">Single</SelectItem>
                     <SelectItem value="Married">Married</SelectItem>
                     <SelectItem value="Mixed">Mixed</SelectItem>
                   </SelectContent>
                 </Select>
+                <FieldError message={errors.avg_marital_status} />
               </div>
             </div>
 
@@ -237,16 +277,17 @@ export default function Calculator() {
               <div>
                 <FieldLabel number={10} label="Industry" />
                 <Select value={form.industry} onValueChange={v => set("industry", v)}>
-                  <SelectTrigger className="h-11"><SelectValue placeholder="Select industry" /></SelectTrigger>
+                  <SelectTrigger className={`h-11 ${errors.industry ? "border-red-400" : ""}`}><SelectValue placeholder="Select industry" /></SelectTrigger>
                   <SelectContent>
                     {INDUSTRIES.map(i => <SelectItem key={i} value={i}>{i}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                <FieldError message={errors.industry} />
               </div>
               <div>
                 <FieldLabel number={11} label="How many employees are currently on coverage?" />
                 <Select value={form.openness_to_benefits} onValueChange={v => set("openness_to_benefits", v)}>
-                  <SelectTrigger className="h-11"><SelectValue placeholder="Select option" /></SelectTrigger>
+                  <SelectTrigger className={`h-11 ${errors.openness_to_benefits ? "border-red-400" : ""}`}><SelectValue placeholder="Select option" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Very Open">Very Open</SelectItem>
                     <SelectItem value="Somewhat Open">Somewhat Open</SelectItem>
@@ -254,6 +295,7 @@ export default function Calculator() {
                     <SelectItem value="Not Interested">Not Interested</SelectItem>
                   </SelectContent>
                 </Select>
+                <FieldError message={errors.openness_to_benefits} />
               </div>
             </div>
 
