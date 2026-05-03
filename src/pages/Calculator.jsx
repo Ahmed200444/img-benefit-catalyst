@@ -77,6 +77,7 @@ export default function Calculator() {
     };
 
     await base44.entities.LeadSubmission.create(payload);
+    base44.functions.invoke('syncLeadToSheets', { data: payload });
     setCalcEmployees(n);
     setSubmitted(true);
     setLoading(false);

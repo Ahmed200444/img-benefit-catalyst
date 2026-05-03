@@ -74,6 +74,7 @@ export default function TypeformCalculator() {
         calculated_90: Math.round(n * 0.9) * RATE,
       };
       await base44.entities.LeadSubmission.create(payload);
+      base44.functions.invoke('syncLeadToSheets', { data: payload });
       setSubmitted(true);
       setLoading(false);
     }
