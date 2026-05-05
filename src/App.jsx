@@ -6,8 +6,6 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // Add page imports here
-import Calculator from "./pages/Calculator";
-import TypeformCalculator from "./pages/TypeformCalculator";
 import StandaloneCalculator from "./pages/StandaloneCalculator";
 import StandaloneTypeformCalculator from "./pages/StandaloneTypeformCalculator";
 
@@ -38,10 +36,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Add your page Route elements here */}
-      <Route path="/" element={<Calculator />} />
-      <Route path="/apply" element={<TypeformCalculator />} />
-      <Route path="/standalone" element={<StandaloneCalculator />} />
-      <Route path="/standalone-apply" element={<StandaloneTypeformCalculator />} />
+      <Route path="/" element={<StandaloneCalculator />} />
+      <Route path="/apply" element={<StandaloneTypeformCalculator />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
