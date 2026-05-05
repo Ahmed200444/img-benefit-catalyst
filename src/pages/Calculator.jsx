@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSxIQBmmgmVHjUBAdhjHEvYAzs8DIOXapIL3a8bvkk6d_pvUE1qNO5wKYZFm-GPWal/exec";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ResultsTable from "@/components/calculator/ResultsTable";
 import SchedulingSection from "@/components/calculator/SchedulingSection";
 import { Shield, Zap, Award, Lock, CheckCircle2 } from "lucide-react";
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSxIQBmmgmVHjUBAdhjHEvYAzs8DIOXapIL3a8bvkk6d_pvUE1qNO5wKYZFm-GPWal/exec";
 
 const RATE = 658.66;
 
