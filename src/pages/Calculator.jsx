@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSxIQBmmgmVHjUBAdhjHEvYAzs8DIOXapIL3a8bvkk6d_pvUE1qNO5wKYZFm-GPWal/exec";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
 import ResultsTable from "@/components/calculator/ResultsTable";
 import SchedulingSection from "@/components/calculator/SchedulingSection";
 import { Shield, Zap, Award, Lock, CheckCircle2 } from "lucide-react";
@@ -102,13 +102,13 @@ export default function Calculator() {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      toast.error("Please fix the errors before submitting.");
       return;
     }
     const n = parseFloat(form.num_employees);
 
     setLoading(true);
     const payload = {
+      submitted_at: new Date().toISOString(),
       name: form.name,
       email: form.email,
       cell_phone: form.cell_phone,
@@ -116,9 +116,9 @@ export default function Calculator() {
       company_website: form.company_website,
       industry: form.industry,
       num_employees: n,
-      avg_employee_salary: form.avg_employee_salary ? parseFloat(parseCurrency(form.avg_employee_salary)) : null,
+      avg_employee_salary: form.avg_employee_salary ? parseFloat(parseCurrency(form.avg_employee_salary)) : "",
       avg_marital_status: form.avg_marital_status,
-      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(parseCurrency(form.gross_revenue_last_year)) : null,
+      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(parseCurrency(form.gross_revenue_last_year)) : "",
       openness_to_benefits: form.openness_to_benefits,
       calculated_60: Math.round(n * 0.6) * RATE,
       calculated_70: Math.round(n * 0.7) * RATE,
@@ -126,11 +126,20 @@ export default function Calculator() {
       calculated_90: Math.round(n * 0.9) * RATE,
     };
 
-    await base44.entities.LeadSubmission.create(payload);
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      // no-cors means we can't read the response, but submission still works
+    }
+
     setCalcEmployees(n);
     setSubmitted(true);
     setLoading(false);
-    toast.success("Your results are ready!");
   };
 
   if (submitted) {
