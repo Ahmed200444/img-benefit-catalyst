@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSxIQBmmgmVHjUBAdhjHEvYAzs8DIOXapIL3a8bvkk6d_pvUE1qNO5wKYZFm-GPWal/exec";
 import ResultsTable from "@/components/calculator/ResultsTable";
 import SchedulingSection from "@/components/calculator/SchedulingSection";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -49,7 +48,6 @@ export default function TypeformCalculator() {
 
   const handleNext = async () => {
     if (current.required && !inputVal && form[current.key] === undefined) {
-      toast.error("This field is required.");
       return;
     }
     const val = current.type === "number" ? parseFloat(inputVal) || inputVal : inputVal;
@@ -64,23 +62,33 @@ export default function TypeformCalculator() {
       setLoading(true);
       const n = parseFloat(newForm.num_employees);
       const payload = {
+        submitted_at: new Date().toISOString(),
         name: newForm.name,
         email: newForm.email,
-        cell_phone: newForm.cell_phone,
-        company_name: newForm.company_name,
-        company_website: newForm.company_website,
-        industry: newForm.industry,
+        cell_phone: newForm.cell_phone || "",
+        company_name: newForm.company_name || "",
+        company_website: newForm.company_website || "",
+        industry: newForm.industry || "",
         num_employees: n,
-        avg_employee_salary: newForm.avg_employee_salary ? parseFloat(newForm.avg_employee_salary) : null,
-        avg_marital_status: newForm.avg_marital_status,
-        gross_revenue_last_year: newForm.gross_revenue_last_year ? parseFloat(newForm.gross_revenue_last_year) : null,
-        openness_to_benefits: newForm.openness_to_benefits,
+        avg_employee_salary: newForm.avg_employee_salary ? parseFloat(newForm.avg_employee_salary) : "",
+        avg_marital_status: newForm.avg_marital_status || "",
+        gross_revenue_last_year: newForm.gross_revenue_last_year ? parseFloat(newForm.gross_revenue_last_year) : "",
+        openness_to_benefits: newForm.openness_to_benefits || "",
         calculated_60: Math.round(n * 0.6) * RATE,
         calculated_70: Math.round(n * 0.7) * RATE,
         calculated_80: Math.round(n * 0.8) * RATE,
         calculated_90: Math.round(n * 0.9) * RATE,
       };
-      await base44.entities.LeadSubmission.create(payload);
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {
+        // no-cors means we can't read the response, but submission still works
+      }
       setSubmitted(true);
       setLoading(false);
     }
