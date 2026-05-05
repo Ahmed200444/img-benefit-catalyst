@@ -21,6 +21,18 @@ const initialForm = {
   avg_marital_status: "", gross_revenue_last_year: "", openness_to_benefits: ""
 };
 
+function formatCurrency(value) {
+  const digits = value.replace(/[^0-9.]/g, '');
+  const parts = digits.split('.');
+  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (parts.length > 1) return intPart + '.' + parts[1].slice(0, 2);
+  return intPart;
+}
+
+function parseCurrency(value) {
+  return value.replace(/,/g, '');
+}
+
 function FieldLabel({ number, label }) {
   return (
     <div className="flex items-center gap-2 mb-1">
@@ -73,10 +85,10 @@ export default function Calculator() {
     const n = parseFloat(form.num_employees);
     if (!form.num_employees) newErrors.num_employees = "Number of employees is required.";
     else if (isNaN(n) || n < 1 || !Number.isInteger(n)) newErrors.num_employees = "Enter a whole number ≥ 1.";
-    const salary = parseFloat(form.avg_employee_salary);
+    const salary = parseFloat(parseCurrency(form.avg_employee_salary));
     if (!form.avg_employee_salary) newErrors.avg_employee_salary = "Average salary is required.";
     else if (isNaN(salary) || salary <= 0) newErrors.avg_employee_salary = "Enter a valid positive amount.";
-    const revenue = parseFloat(form.gross_revenue_last_year);
+    const revenue = parseFloat(parseCurrency(form.gross_revenue_last_year));
     if (!form.gross_revenue_last_year) newErrors.gross_revenue_last_year = "Gross revenue is required.";
     else if (isNaN(revenue) || revenue <= 0) newErrors.gross_revenue_last_year = "Enter a valid positive amount.";
     if (!form.avg_marital_status) newErrors.avg_marital_status = "Please select a marital status.";
@@ -104,9 +116,9 @@ export default function Calculator() {
       company_website: form.company_website,
       industry: form.industry,
       num_employees: n,
-      avg_employee_salary: form.avg_employee_salary ? parseFloat(form.avg_employee_salary) : null,
+      avg_employee_salary: form.avg_employee_salary ? parseFloat(parseCurrency(form.avg_employee_salary)) : null,
       avg_marital_status: form.avg_marital_status,
-      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(form.gross_revenue_last_year) : null,
+      gross_revenue_last_year: form.gross_revenue_last_year ? parseFloat(parseCurrency(form.gross_revenue_last_year)) : null,
       openness_to_benefits: form.openness_to_benefits,
       calculated_60: Math.round(n * 0.6) * RATE,
       calculated_70: Math.round(n * 0.7) * RATE,
@@ -239,7 +251,7 @@ export default function Calculator() {
                 <FieldLabel number={6} label="Gross Revenue Last Year" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" min="0" placeholder="1000000" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", e.target.value)} className={`h-11 pl-7 ${errors.gross_revenue_last_year ? "border-red-400" : ""}`} />
+                  <Input type="text" inputMode="decimal" placeholder="1,000,000.00" value={form.gross_revenue_last_year} onChange={e => set("gross_revenue_last_year", formatCurrency(e.target.value))} className={`h-11 pl-7 ${errors.gross_revenue_last_year ? "border-red-400" : ""}`} />
                 </div>
                 <FieldError message={errors.gross_revenue_last_year} />
               </div>
@@ -255,7 +267,7 @@ export default function Calculator() {
                 <FieldLabel number={8} label="Average Annual Gross Wages Per Employee" />
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
-                  <Input type="number" min="0" placeholder="55000" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", e.target.value)} className={`h-11 pl-7 ${errors.avg_employee_salary ? "border-red-400" : ""}`} />
+                  <Input type="text" inputMode="decimal" placeholder="55,000.00" value={form.avg_employee_salary} onChange={e => set("avg_employee_salary", formatCurrency(e.target.value))} className={`h-11 pl-7 ${errors.avg_employee_salary ? "border-red-400" : ""}`} />
                 </div>
                 <FieldError message={errors.avg_employee_salary} />
               </div>
