@@ -6,7 +6,7 @@ import SchedulingSection from "@/components/calculator/SchedulingSection";
 import { Shield, Zap, Award, Lock, CheckCircle2 } from "lucide-react";
 
 // ─── REPLACE THIS URL with your Google Apps Script Web App URL ───────────────
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSxIQBmmgmVHjUBAdhjHEvYAzs8DIOXapIL3a8bvkk6d_pvUE1qNO5wKYZFm-GPWal/exec";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const RATE = 658.66;
